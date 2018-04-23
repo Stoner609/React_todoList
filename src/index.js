@@ -48,7 +48,6 @@ class App extends React.Component {
 			items: [],
 			date: new Date(),
 			test: '',
-			test2: []
 		};
 
 		this.onChange = this.onChange.bind(this);
