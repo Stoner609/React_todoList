@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+import ListTest from './list'
+
 class List extends React.Component {
 	constructor(props) {
 		super(props);
@@ -15,11 +17,26 @@ class List extends React.Component {
 		console.log('List - componentDidMount');
 	}
 
+	componentWillReceiveProps(nextProps) {
+		console.log('List - componentWillReceiveProps');
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		console.log('List - shouldComponentUpdate');
+		if (nextProps.items.length === this.props.items.length) {
+			console.log('List - 不渲染')
+			return false;
+		}
+		console.log('List - 渲染')
+		return true;
+	}
+
 	componentWillUpdate() {
 		console.log('List - componentWillUpdate');
 	}
+
 	componentDidUpdate() {
-		console.log('List - componentDidUpdate')
+		console.log('List - componentDidUpdate');
 	}
 
 	componentWillUnmount() {
@@ -61,19 +78,29 @@ class App extends React.Component {
 
 	componentDidMount() {
 		console.log('App - componentDidMount ----------------------');
-		this.timeID = setInterval(() => this.tick(), 1000);
+		//this.timeID = setInterval(() => this.tick(), 1000);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		console.log('App - componentWillReceiveProps');
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		console.log('App - shouldComponentUpdate');
+		return true;
 	}
 
 	componentWillUpdate() {
 		console.log('App - componentWillUpdate');
 	}
 	componentDidUpdate() {
-		console.log('App - componentDidUpdate ---------------------')
+		//console.log(this.state);
+		console.log('App - componentDidUpdate ---------------------');
 	}
 
 	componentWillUnmount() {
 		console.log('App - componentWillUnmount');
-		clearInterval(this.timeID);
+		//clearInterval(this.timeID);
 	}
 
 	tick() {
@@ -140,6 +167,7 @@ class App extends React.Component {
 				<List items={this.state.items} />
 				<button onClick={this.handleClick}>{this.state.test}</button>
 				<button onClick={this.preventPop}>click</button>
+				<ListTest items={[1, 2, 3]} />
 			</div>
 		);
 	}
