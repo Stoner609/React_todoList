@@ -54,8 +54,9 @@ class List extends React.Component {
 			<li 
 				key={x.text}
 			>
-				{x.text + x.date.toLocaleTimeString()}
-				<span className='close' onClick={() => this.remove(x.text)}>x</span>
+				<div>內容： {x.text}</div>
+				<div>時間： {x.date.toLocaleTimeString()}</div>
+				<span className='delete' onClick={() => this.remove(x.text)}>x</span>
 				{/* <span className='close' onClick={this.props.handleDelete.bind(this, x.text)}>x</span> */}
 			</li>
 		)
@@ -81,15 +82,14 @@ class App extends React.Component {
 			items: [],
 			date: new Date(),
 			test: '',
-			errorMsg: '',
-			errorClass: 'error hide',
-			btnDisabled: true
+			textEmpty: false
 		};
 
 		this.onChange = this.onChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
 		this.preventPop = this.preventPop.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
+		this.handleClear = this.handleClear.bind(this);
 	}
 
 	componentWillMount() {
@@ -131,24 +131,18 @@ class App extends React.Component {
 	onChange = (event) => {
 		// console.log(event.currentTarget.value)
 		// console.log(event.target.value);
-		var availableText = this.state.items.some(x => x.text === event.target.value);
-		if (availableText) {
-			this.setState({
-				errorMsg: '資料內已有該筆資料',
-				errorClass: 'error show',
-				btnDisabled: false
-			})
+		let empty = false;
+		if (event.target.value === '') {
+			empty = true;
 		} else {
-			this.setState({
-				errorMsg: '',
-				errorClass: 'error hide',
-				btnDisabled: true
-			})
+			empty = false;
 		}
 
 		this.setState({ 
 			text: event.target.value,
+			textEmpty: empty
 		});
+
 	}
 
 	onSubmit = (event) => {
@@ -157,14 +151,13 @@ class App extends React.Component {
 		//   term: '',
 		//   items: [...this.state.items, this.state.term]
 		// });
-		
+
 		if (this.state.text === '') {
 			this.setState({
-				errorMsg: '不可為空白',
-				errorClass: 'error show'
+				textEmpty: true
 			});
-			return;
-		};	
+			return;	
+		}
 		
 		this.setState((prevState, props) => {
 			return {
@@ -172,7 +165,8 @@ class App extends React.Component {
 				items: prevState.items.concat({
 					text: this.state.text,
 					date: this.state.date
-				})
+				}),
+				textEmpty: false
 			}
 		});
 	}
@@ -194,6 +188,12 @@ class App extends React.Component {
 		  });
 	}
 
+	handleClear() {
+		this.setState({
+			items: []
+		})
+	}
+
 	// preventPop = (e) => {
 	// 	e.preventDefault();
 	// 	let name = this.state.test;
@@ -208,17 +208,39 @@ class App extends React.Component {
 
 	render() {
 		console.log('App - render');
+
+		let availableText
+		let btnDisabled = true;
+		let errorMsg = '';
+		let errorClass = '';
+		
+		if (this.state.textEmpty) {
+			errorMsg = this.state.textEmpty ? '不可為空白' : ''
+			errorClass = this.state.textEmpty ? 'error show' : 'error hide';
+		}else {
+			availableText = this.state.items.some(x => x.text === this.state.text);
+			btnDisabled = !availableText;
+			errorMsg = '';
+			errorClass = availableText ? 'error show' : 'error hide';
+			errorMsg = availableText ?　'資料內已有該筆資料' : '';
+		}
+	
 		return (
-			<div>
-				<form className="App" onSubmit={this.onSubmit}>
-					<h2>{this.state.date.toLocaleTimeString()}</h2>
-					<input className='text' value={this.state.text} onChange={this.onChange} />
-					<button className='btnSubmit' disabled={!this.state.btnDisabled}>Add</button>
+			<div className="todoListMain">
+				<div className="header">
+					<h2>現在時間： {this.state.date.toLocaleTimeString()}</h2>
+				</div>
+				<form className="App" onSubmit={this.onSubmit}>	
+					<input className='text' placeholder="請輸入任何字" value={this.state.text} onChange={this.onChange} />
+					<button className='btnSubmit' disabled={!btnDisabled}>Add</button>
 					<div>
-					<label className={this.state.errorClass}>{this.state.errorMsg}</label>
+						<label className={errorClass}>{errorMsg}</label>
 					</div>
 				</form>
 				<List items={this.state.items} handleDelete={this.handleDelete} />
+				<div>
+					<button className='btnClear' onClick={this.handleClear} >Clear</button>
+				</div>
 				{/* <button onClick={this.handleClick}>{this.state.test}</button> */}
 				{/* <button onClick={this.preventPop}>click</button> */}
 				{/* <ListTest items={[1, 2, 3]} /> */}
