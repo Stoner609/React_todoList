@@ -60,14 +60,19 @@
     margin: 0;
     display: flex;
     justify-content: center;
+    width:100%;
   }
+
+#root {
+  width: 500px;
+  text-align: center;
+}
 
   .App {
     color: white;
     text-align: center;
     padding: 10px;
     position: relative;
-    width: 500px;
   }
 
   .header {
@@ -76,7 +81,6 @@
     text-align: center;
     padding: 10px;
     position: relative;
-    width: 500px;
   }
 
   h2{
@@ -84,17 +88,13 @@
   }
 
   .btnSubmit {
-    margin-top: 10px;
+    margin: 5px;
     padding: 5px;
-    position: absolute;
-    top: -1px;
-    left: 320px;
-    z-index: 1;
 
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
-    height: 31px;
+    height: auto;
     
     background-color: turquoise;
     border-color: turquoise;
@@ -121,10 +121,9 @@
 
   .text {
     border: turquoise 2px solid;
-    height: 30px;
     width: 200px;
     border-radius: 5px;
-    padding-left: 5px;
+    padding: 8px;
   }
 
   ul {
