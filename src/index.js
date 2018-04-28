@@ -8,7 +8,6 @@ class List extends React.Component {
 	constructor(props) {
 		console.log('List - constructor');
 		super(props);
-		this.createTask = this.createTask.bind(this);
 	}
 	componentWillMount() {
 		console.log('List - componentWillMount');
@@ -45,21 +44,7 @@ class List extends React.Component {
 	}
 
 	remove(text) {
-		console.warn('list-delete');
 		this.props.handleDelete(text);
-	}
-
-	createTask(x) {
-		return (
-			<li 
-				key={x.text}
-			>
-				<div>內容： {x.text}</div>
-				<div>時間： {x.date.toLocaleTimeString()}</div>
-				<span className='delete' onClick={() => this.remove(x.text)}>x</span>
-				{/* <span className='close' onClick={this.props.handleDelete.bind(this, x.text)}>x</span> */}
-			</li>
-		)
 	}
 
 	render() {
@@ -67,7 +52,15 @@ class List extends React.Component {
 		return (
 			<ul>
 				{
-					this.props.items.map(x => this.createTask(x))
+					this.props.items.map(x =>
+						<li
+							key={x.text}
+						>
+							<div>內容： {x.text}</div>
+							<div>時間： {x.date.toLocaleTimeString()}</div>
+							<span className='delete' onClick={this.remove.bind(this, x.text)}>x</span>
+						</li>
+					)
 				}
 			</ul>
 		)
@@ -138,7 +131,7 @@ class App extends React.Component {
 			empty = false;
 		}
 
-		this.setState({ 
+		this.setState({
 			text: event.target.value,
 			textEmpty: empty
 		});
@@ -156,9 +149,9 @@ class App extends React.Component {
 			this.setState({
 				textEmpty: true
 			});
-			return;	
+			return;
 		}
-		
+
 		this.setState((prevState, props) => {
 			return {
 				text: '',
@@ -181,11 +174,11 @@ class App extends React.Component {
 	handleDelete(name) {
 		var filteredItems = this.state.items.filter(function (item) {
 			return (item.text !== name);
-		  });
-		 
-		  this.setState({
+		});
+
+		this.setState({
 			items: filteredItems
-		  });
+		});
 	}
 
 	handleClear() {
@@ -213,24 +206,24 @@ class App extends React.Component {
 		let btnDisabled = true;
 		let errorMsg = '';
 		let errorClass = '';
-		
+
 		if (this.state.textEmpty) {
 			errorMsg = this.state.textEmpty ? '不可為空白' : ''
 			errorClass = this.state.textEmpty ? 'error show' : 'error hide';
-		}else {
+		} else {
 			availableText = this.state.items.some(x => x.text === this.state.text);
 			btnDisabled = !availableText;
 			errorMsg = '';
 			errorClass = availableText ? 'error show' : 'error hide';
-			errorMsg = availableText ?　'資料內已有該筆資料' : '';
+			errorMsg = availableText ? 　'資料內已有該筆資料' : '';
 		}
-	
+
 		return (
 			<div className="todoListMain">
 				<div className="header">
 					<h2>現在時間： {this.state.date.toLocaleTimeString()}</h2>
 				</div>
-				<form className="App" onSubmit={this.onSubmit}>	
+				<form className="App" onSubmit={this.onSubmit}>
 					<input className='text' placeholder="請輸入任何字" value={this.state.text} onChange={this.onChange} />
 					<button className='btnSubmit' disabled={!btnDisabled}>Add</button>
 					<div>
