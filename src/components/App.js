@@ -17,6 +17,8 @@ class App extends React.Component {
     this.preventPop = this.preventPop.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleClear = this.handleClear.bind(this);
+
+    this.onSelect = this.onSelect.bind(this);
   }
 
   componentWillMount() {
@@ -133,6 +135,11 @@ class App extends React.Component {
     alert(name);
   }
 
+  onSelect(event) {
+    const selectedIndex = event.target.options.selectedIndex;
+    console.log(event.target.options[selectedIndex].getAttribute('data-key'));
+  }
+
   render() {
     console.log('App - render');
 
@@ -171,6 +178,13 @@ class App extends React.Component {
         {/* <button onClick={this.handleClick}>{this.state.test}</button> */}
         {/* <button onClick={this.preventPop}>click</button> */}
         {/* <ListTest items={[1, 2, 3]} /> */}
+
+
+        <div>
+          <select onChange={this.onSelect}>
+            <option key="1" data-key="1">One</option>
+            <option key="2" data-key="2">Two</option>             </select>
+        </div>
       </div>
     );
   }
