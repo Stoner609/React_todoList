@@ -52,9 +52,9 @@ class List extends React.Component {
 		return (
 			<ul>
 				{
-					this.props.items.map(x =>
+					this.props.items.map((x, index) =>
 						<li
-							key={x.text}
+							key={index}
 						>
 							<div>內容： {x.text}</div>
 							<div>時間： {x.date.toLocaleTimeString()}</div>
